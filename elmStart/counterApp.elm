@@ -1,9 +1,11 @@
-module Hello exposing (..)
+module Counter exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Html.App as App
+
+import Styles
 
 type alias Model = { problems: Int, username: String }
 type Msg = 
@@ -38,7 +40,7 @@ view model =
       ++ " left "
 
   in 
-    div [ mainStyle ]
+    div [ Styles.mainStyle ]
     [ h1 [] [text "Algo Man"]    
     , div [] [ 
         button 
@@ -48,38 +50,9 @@ view model =
           timerButton "Start timer" (Increment 10)]    
     , text caption
     ]
-  
 
-  
 main =
     App.beginnerProgram
         { model = model
         , view = view
         , update = update }
-
-mainStyle =
-    style
-        [ ( "font-family", "-apple-system, system, sans-serif" )
-        , ( "margin", "10px" )
-        , ( "padding", "40px" )
-        , ( "display", "flex" )
-        , ( "flex-direction", "column" )
-        , ( "align-items", "stretch" )
-        , ( "background-color", "#fafafa" )
-        , ( "border", "lightgray solid 1px" )
-        ]
-
-inputStyle =
-    style
-        [ ( "border", "#fafafa solid" )
-        , ( "border-bottom", "lightgray solid 1px" )
-        , ( "font-size", "2em" )
-        , ( "color", "rgba(0,0,0,0.75)" )
-        , ( "background-color", "#fafafa" )
-        ]
-
-cardStyle =
-    style
-        [ ( "font-size", "2em" )
-        , ( "color", "rgba(0,0,0,0.75)" )
-        ]
