@@ -1,0 +1,133 @@
+var _user$project$Hello$cardStyle = _elm_lang$html$Html_Attributes$style(
+	_elm_lang$core$Native_List.fromArray(
+		[
+			{ctor: '_Tuple2', _0: 'font-size', _1: '2em'},
+			{ctor: '_Tuple2', _0: 'color', _1: 'rgba(0,0,0,0.75)'}
+		]));
+var _user$project$Hello$inputStyle = _elm_lang$html$Html_Attributes$style(
+	_elm_lang$core$Native_List.fromArray(
+		[
+			{ctor: '_Tuple2', _0: 'border', _1: '#fafafa solid'},
+			{ctor: '_Tuple2', _0: 'border-bottom', _1: 'lightgray solid 1px'},
+			{ctor: '_Tuple2', _0: 'font-size', _1: '2em'},
+			{ctor: '_Tuple2', _0: 'color', _1: 'rgba(0,0,0,0.75)'},
+			{ctor: '_Tuple2', _0: 'background-color', _1: '#fafafa'}
+		]));
+var _user$project$Hello$mainStyle = _elm_lang$html$Html_Attributes$style(
+	_elm_lang$core$Native_List.fromArray(
+		[
+			{ctor: '_Tuple2', _0: 'font-family', _1: '-apple-system, system, sans-serif'},
+			{ctor: '_Tuple2', _0: 'margin', _1: '10px'},
+			{ctor: '_Tuple2', _0: 'padding', _1: '40px'},
+			{ctor: '_Tuple2', _0: 'display', _1: 'flex'},
+			{ctor: '_Tuple2', _0: 'flex-direction', _1: 'column'},
+			{ctor: '_Tuple2', _0: 'align-items', _1: 'stretch'},
+			{ctor: '_Tuple2', _0: 'background-color', _1: '#fafafa'},
+			{ctor: '_Tuple2', _0: 'border', _1: 'lightgray solid 1px'}
+		]));
+var _user$project$Hello$timerButton = F2(
+	function (caption, action) {
+		return A2(
+			_elm_lang$html$Html$button,
+			_elm_lang$core$Native_List.fromArray(
+				[
+					_elm_lang$html$Html_Events$onClick(action)
+				]),
+			_elm_lang$core$Native_List.fromArray(
+				[
+					_elm_lang$html$Html$text(caption)
+				]));
+	});
+var _user$project$Hello$update = F2(
+	function (msg, model) {
+		var _p0 = msg;
+		if (_p0.ctor === 'Increment') {
+			return _elm_lang$core$Native_Utils.update(
+				model,
+				{problems: model.problems + _p0._0});
+		} else {
+			return _elm_lang$core$Native_Utils.update(
+				model,
+				{
+					problems: A2(_elm_lang$core$Basics$max, 0, model.problems - _p0._0)
+				});
+		}
+	});
+var _user$project$Hello$model = {problems: 0, username: 'Anthony'};
+var _user$project$Hello$greeting = A2(_elm_lang$core$Basics_ops['++'], 'Hello, ', _user$project$Hello$model.username);
+var _user$project$Hello$Model = F2(
+	function (a, b) {
+		return {problems: a, username: b};
+	});
+var _user$project$Hello$Decrement = function (a) {
+	return {ctor: 'Decrement', _0: a};
+};
+var _user$project$Hello$Increment = function (a) {
+	return {ctor: 'Increment', _0: a};
+};
+var _user$project$Hello$view = function (model) {
+	var caption = A2(
+		_elm_lang$core$Basics_ops['++'],
+		_user$project$Hello$greeting,
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			':   ',
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				'You have ',
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					_elm_lang$core$Basics$toString(model.problems),
+					' left '))));
+	var isDisabled = _elm_lang$core$Native_Utils.cmp(model.problems, 0) < 1;
+	return A2(
+		_elm_lang$html$Html$div,
+		_elm_lang$core$Native_List.fromArray(
+			[_user$project$Hello$mainStyle]),
+		_elm_lang$core$Native_List.fromArray(
+			[
+				A2(
+				_elm_lang$html$Html$h1,
+				_elm_lang$core$Native_List.fromArray(
+					[]),
+				_elm_lang$core$Native_List.fromArray(
+					[
+						_elm_lang$html$Html$text('Algo Man')
+					])),
+				A2(
+				_elm_lang$html$Html$div,
+				_elm_lang$core$Native_List.fromArray(
+					[]),
+				_elm_lang$core$Native_List.fromArray(
+					[
+						A2(
+						_elm_lang$html$Html$button,
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_elm_lang$html$Html_Attributes$disabled(isDisabled),
+								_elm_lang$html$Html_Events$onClick(
+								_user$project$Hello$Decrement(2))
+							]),
+						_elm_lang$core$Native_List.fromArray(
+							[
+								_elm_lang$html$Html$text('Stop timer')
+							]))
+					])),
+				A2(
+				_elm_lang$html$Html$div,
+				_elm_lang$core$Native_List.fromArray(
+					[]),
+				_elm_lang$core$Native_List.fromArray(
+					[
+						A2(
+						_user$project$Hello$timerButton,
+						'Start timer',
+						_user$project$Hello$Increment(10))
+					])),
+				_elm_lang$html$Html$text(caption)
+			]));
+};
+var _user$project$Hello$main = {
+	main: _elm_lang$html$Html_App$beginnerProgram(
+		{model: _user$project$Hello$model, view: _user$project$Hello$view, update: _user$project$Hello$update})
+};
