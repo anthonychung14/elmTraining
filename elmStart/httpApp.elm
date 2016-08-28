@@ -7,7 +7,7 @@ import Html.App as App
 
 import Styles
 import Http
-import Json.Decode as Json
+import Json.Decode as Decode exposing ((:=))
 import Task
 
 --TODO: FIGURE OUT BETTER DEFAULTS THAN "NONE"
@@ -56,7 +56,7 @@ update msg model =
       (model, Cmd.none)
     
     GitStart ->
-      (model, getFolders url)
+      (model, getFolders fetchUrl)
 
     FetchFail _ ->
       (model, Cmd.none)
@@ -73,21 +73,21 @@ fetchAll =
   Http.get decodeFolders fetchUrl
     |> Task.perform FetchFail FetchSucceed
 
-decodeFolders: Json.Decode.Decoder (List Folder)
+decodeFolders: Decode.Decoder (List Folder)
 decodeFolders =
-  Json.at ["data"] 
-  Json.Decode.list folderDecoder
+  Decode.at ["data"] 
+  Decode.list folderDecoder
 
-folderDecoder: Json.Decode.Decoder Folder
+folderDecoder: Decode.Decoder Folder
 folderDecoder =
-  Json.Decode.object3 Folder
+  Decode.object3 Folder
     ("name" := Decode.string)  
     ("html_url" := Decode.string)  
 
 
 --HTTP REQS
-getFolders getUrl =
-  Task.perform FetchFail FetchSucceed (Http.get decodeFolders getUrl)
+getFolders fetchUrl =
+  Task.perform FetchFail FetchSucceed (Http.get decodeFolders fetchUrl)
 
 --MAIN
 main: Program Never
