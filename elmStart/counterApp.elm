@@ -41,7 +41,7 @@ view model =
 
   in 
     div [ Styles.mainStyle ]
-    [ h1 [] [text "Algo Man"]    
+    [ h1 [] [text "Basic Counter"]    
     , div [] [ 
         button 
           [ disabled isDisabled, onClick (Decrement 2)]

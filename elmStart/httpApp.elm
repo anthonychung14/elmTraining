@@ -7,50 +7,88 @@ import Html.App as App
 
 import Styles
 import Http
+import Json.Decode as Json
+import Task
 
 --TODO: FIGURE OUT BETTER DEFAULTS THAN "NONE"
 --MODELS
-type alias Problem = { 
-  problems: Int, 
-  dataStruct: String }
+type alias Problem = 
+  { time: Int 
+  , dataStruct: String 
+  }
 
-type alias Folders = 
+type alias Folder = 
   { name: String
   , url: String
   }
 
-model : (Problem, Folders)
-model = 
+init : (Folder, Cmd Msg)
+init = 
   (
-    { problems = 0, dataStruct = "None" },
-    { name = "None", url = "None"}
+    { name = "Stuff"
+    , url = "None"
+    },
+    Cmd.none
   )
-
+  
 
 --VIEWS
-view : (Problem, Folders) -> Html Msg
+view : Folder -> Html Msg
 view model =
   div [ Styles.mainStyle ]
   [ h1 [] [text "HTTP Requests"]
   , div [] [
-    button [] [text "GET from Github"]]
+    button [onClick GitStart] [text "GET from Github"]]
   ]
 
-
 --UPDATE
-update msg model =
-  model
-
 type Msg =
-  NoOp
-  | Fail Http.Error
-  | GetDone (List Folders)
-  | GetStart
+  NoOp  
+  | GitStart
+  | FetchSucceed String
+  | FetchFail Http.Error
+
+update: Msg -> Folder -> (Folder, Cmd Msg)
+update msg model =
+  case msg of
+    
+    NoOp ->
+      (model, Cmd.none)
+    
+    GitStart ->
+      (model, getFolders)
+
+    FetchFail _ ->
+      (model, Cmd.none)
+    
+    FetchSucceed newUrl ->
+      (Folder model.name newUrl, Cmd.none)
+    
+    
+
+--HTTP REQS
+getFolders =
+  let
+    url = "https://api.github.com/repos/anthonychung14/gitajob/contents"
+  in
+    Task.perform FetchFail FetchSucceed (Http.get decodeUrl url)
+
+decodeUrl: Json.Decoder String
+decodeUrl =
+  Json.at ["data"] Json.string
 
 
 --MAIN
+main: Program Never
 main =
-  App.beginnerProgram
-      { model = model
+  App.program
+      { init = init
       , view = view
-      , update = update }
+      , update = update 
+      , subscriptions = subscriptions
+      }
+
+-- SUBSCRIPTIONS
+subscriptions : Folder -> Sub Msg
+subscriptions model =
+    Sub.none
