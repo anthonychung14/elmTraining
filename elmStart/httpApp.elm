@@ -19,14 +19,14 @@ type alias Problem =
 
 type alias Folder = 
   { name: String
-  , url: String
+  , html_url: String
   }
 
 init : (Folder, Cmd Msg)
 init = 
   (
     { name = "Stuff"
-    , url = "None"
+    , html_url = "None"
     },
     Cmd.none
   )
@@ -56,7 +56,7 @@ update msg model =
       (model, Cmd.none)
     
     GitStart ->
-      (model, getFolders)
+      (model, getFolders url)
 
     FetchFail _ ->
       (model, Cmd.none)
@@ -65,18 +65,29 @@ update msg model =
       (Folder model.name newUrl, Cmd.none)
     
     
+fetchUrl: String
+fetchUrl = "https://api.github.com/repos/anthonychung14/gitajob/contents"
+
+fetchAll: Cmd Msg
+fetchAll =
+  Http.get decodeFolders fetchUrl
+    |> Task.perform FetchFail FetchSucceed
+
+decodeFolders: Json.Decode.Decoder (List Folder)
+decodeFolders =
+  Json.at ["data"] 
+  Json.Decode.list folderDecoder
+
+folderDecoder: Json.Decode.Decoder Folder
+folderDecoder =
+  Json.Decode.object3 Folder
+    ("name" := Decode.string)  
+    ("html_url" := Decode.string)  
+
 
 --HTTP REQS
-getFolders =
-  let
-    url = "https://api.github.com/repos/anthonychung14/gitajob/contents"
-  in
-    Task.perform FetchFail FetchSucceed (Http.get decodeUrl url)
-
-decodeUrl: Json.Decoder String
-decodeUrl =
-  Json.at ["data"] Json.string
-
+getFolders getUrl =
+  Task.perform FetchFail FetchSucceed (Http.get decodeFolders getUrl)
 
 --MAIN
 main: Program Never
