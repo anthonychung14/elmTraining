@@ -79,9 +79,9 @@ update msg model =
       ({ model | message = "ERROR IN FETCH" ++ (toString err) }, Cmd.none)
     
     FetchSucceed folders ->
-      ({ model | folders = folders, message = "FETCHED DATA" }, Cmd.none)
-    
-    
+      ({ model | folders = folders, message = "FETCHED DATA" }, Cmd.none) 
+
+--HTTP REQS
 fetchUrl: String
 fetchUrl = "https://api.github.com/repos/anthonychung14/algorithms/contents"
 --fetchUrl = "https://api.github.com/repos/anthonychung14/gitajob/contents"
@@ -100,10 +100,6 @@ folderDecoder =
   Decode.object2 Folder
     ("name" := Decode.string)  
     ("html_url" := Decode.string)  
-    
---HTTP REQS
---getFolders fetchUrl =
---  Task.perform FetchFail FetchSucceed (Http.get decodeFolders fetchUrl)
 
 --MAIN
 main: Program Never
